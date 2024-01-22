@@ -66,6 +66,7 @@ const images = [
   },
 ];
 
+// Створення списку li з аосиланням на картинки
 
 const galleryMarkup = images
   .map((image) => `
@@ -80,8 +81,15 @@ const galleryMarkup = images
   </li>`)
   .join('');
 
-// console.log(galleryMarkup);
 
 galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
 
-// const listItems = document.querySelectorAll(".gallery-item");
+// Додавання обробника подій для заборони завантаження картинки при кліку на неї
+
+galleryContainer.addEventListener('click', e => {
+    e.preventDefault();
+    });
+
+//
+
+
