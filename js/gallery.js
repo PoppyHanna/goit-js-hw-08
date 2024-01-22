@@ -66,7 +66,7 @@ const images = [
   },
 ];
 
-// Створення списку li з аосиланням на картинки
+// Створення списку li з посиланням на картинки
 
 const galleryMarkup = images
   .map((image) => `
@@ -84,12 +84,19 @@ const galleryMarkup = images
 
 galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
 
-// Додавання обробника подій для заборони завантаження картинки при кліку на неї
 
-galleryContainer.addEventListener('click', e => {
-    e.preventDefault();
-    });
+//Додавання функціоналу прослуховування кліка по елементах галереї та отримання посилання на велике зображення при кліку.
 
-//
+galleryContainer.addEventListener('click', onGalleryItemClick);
 
+function onGalleryItemClick(event) {
+  event.preventDefault();
 
+  const target = event.target;
+  const galleryLink = target.closest('.gallery-link');
+
+  if (!galleryLink) return;
+
+  const largeImageSrc = galleryLink.getAttribute('href');
+  console.log('Large Image Source:', largeImageSrc);
+}
