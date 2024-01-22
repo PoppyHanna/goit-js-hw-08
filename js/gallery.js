@@ -69,14 +69,14 @@ const images = [
 // Створення списку li з посиланням на картинки
 
 const galleryMarkup = images
-  .map((image) => `
+    .map(({original, preview, description}) => `
   <li class="gallery-item">
-  <a class="gallery-link" href="${image.original}">
+  <a class="gallery-link" href="${original}">
     <img
     class="gallery-image"
-    src="${image.preview}" 
-    data-sourse="${image.original}"
-    alt="${image.description}"/>
+    src="${preview}" 
+    data-sourse="${original}"
+    alt="${description}"/>
     </a>
   </li>`)
   .join('');
@@ -91,12 +91,32 @@ galleryContainer.addEventListener('click', onGalleryItemClick);
 
 function onGalleryItemClick(event) {
   event.preventDefault();
-
+ 
   const target = event.target;
   const galleryLink = target.closest('.gallery-link');
 
-  if (!galleryLink) return;
+ if (!galleryLink) return;
 
-  const largeImageSrc = galleryLink.getAttribute('href');
-  console.log('Large Image Source:', largeImageSrc);
+    const largeImageSrc = galleryLink.getAttribute('href');
+  const largeImageAlt = galleryLink.querySelector('img').getAttribute('alt');
+
+  const instance = basicLightbox.create(`
+    <img src="${largeImageSrc}" alt="${largeImageAlt}" />
+  `);
+
+    instance.show()
+    
+    // Додавання прослуховування події при натисканні на клавішу Escape
+    
+  window.addEventListener('keydown', onEscapeKeyPress);
+
+    function onEscapeKeyPress(event) {
+        if (event.code === 'Escape') {
+            instance.close();
+
+            // Припинення прослуховування клавіші Escape після закриття модального вікна
+            
+            window.removeEventListener('keydown', onEscapeKeyPress);
+        }
+    }
 }

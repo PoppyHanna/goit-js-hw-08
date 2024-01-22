@@ -25,4 +25,5 @@ ul {
 
 .gallery-link:hover .gallery-image {
   transform: scale(1.05);
+  cursor: pointer;
 }
