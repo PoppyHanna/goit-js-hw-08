@@ -68,6 +68,7 @@ const images = [
 
 // Створення списку li з посиланням на картинки
 
+
 const galleryMarkup = images
     .map(({original, preview, description}) => `
   <li class="gallery-item">
@@ -75,14 +76,14 @@ const galleryMarkup = images
     <img
     class="gallery-image"
     src="${preview}" 
-    data-sourse="${original}"
+    data-source="${original}"
     alt="${description}"/>
     </a>
   </li>`)
   .join('');
 
+galleryContainer.innerHTML += galleryMarkup;
 
-galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
 
 
 //Додавання функціоналу прослуховування кліка по елементах галереї та отримання посилання на велике зображення при кліку.
@@ -97,26 +98,42 @@ function onGalleryItemClick(event) {
 
  if (!galleryLink) return;
 
-    const largeImageSrc = galleryLink.getAttribute('href');
+  const largeImageSrc = galleryLink.getAttribute('href');
   const largeImageAlt = galleryLink.querySelector('img').getAttribute('alt');
 
   const instance = basicLightbox.create(`
-    <img src="${largeImageSrc}" alt="${largeImageAlt}" />
-  `);
-
-    instance.show()
+        <img src="${largeImageSrc}" alt="${largeImageAlt}" />
+        `,
+        {
+          // Додавання прослуховування події при натисканні на клавішу Escape
+          
+            onShow: (instance) => {
+                console.log('ADD LISTENER');
+                document.addEventListener('keydown', onEscapeKeyPress);
+            },
+          
+          // Припинення прослуховування клавіші Escape після закриття модального вікна
+          
+            onClose: (instance) => {
+                console.log('REMOVE LISTENER');  
+                document.removeEventListener('keydown', onEscapeKeyPress);
+                       
+            }
+       }
+    );
     
-    // Додавання прослуховування події при натисканні на клавішу Escape
+    // instance.show()
+    instance.show(() => console.log('lightbox now visible'));
     
-  window.addEventListener('keydown', onEscapeKeyPress);
 
     function onEscapeKeyPress(event) {
         if (event.code === 'Escape') {
-            instance.close();
-
-            // Припинення прослуховування клавіші Escape після закриття модального вікна
-            
-            window.removeEventListener('keydown', onEscapeKeyPress);
+            // instance.close();
+            instance.close(() => console.log('lightbox not visible anymore'))
         }
+
     }
+
 }
+
+
